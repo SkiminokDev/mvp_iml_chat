@@ -17,6 +17,15 @@ Route::middleware('auth:sanctum')->get('/test-me', function(Request $request) {
 	]);
 });
 
+// =============================================
+// ИНФОРМАЦИЯ О ПРОЕКТЕ (публичный endpoint)
+// =============================================
+Route::get('/info', function () {
+	return response()->json([
+		'info' => 'проект чат бота на ии'
+	]);
+})->name('api.info');
+
 
 //use Illuminate\Support\Facades\Route;
 //use App\Http\Controllers\Api\MessController;
