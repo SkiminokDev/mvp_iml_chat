@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+body {
+    font-family: Nunito, sans-serif !important;
+    font-size: .875rem !important;
+    --tw-bg-opacity: 1;
+    background-color: rgba(248, 250, 252, var(--tw-bg-opacity));
+    line-height: 1.5rem;
+    line-height: 1.5;
+    letter-spacing: .01875rem;
+    overflow-x: hidden;
+    color: #47404f;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+}
+
+.header-2-wrapper {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 80px;
+    box-shadow: 0 1px 15px rgba(0, 0, 0, .04), 0 1px 6px rgba(0, 0, 0, .04);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background: #fff;
+    z-index: 100;
+}
+
+.main-content-wrap {
+    width: calc(100% - 120px);
+    margin-left: 120px;
+    min-height: 100vh;
+    margin-top: 80px;
+    transition: all .24s ease-in-out;
+}
+
+.main-content-body {
+    min-height: calc(100vh - 80px);
+}
+
+.sidebar-left.open {
+    left: 0;
+    transition: all .24s ease-in-out;
+}
+
+.sidebar-left {
+    position: fixed;
+    top: 80px;
+    left: -120px;
+    width: 120px;
+    height: calc(100vh - 80px);
+    background: #fff;
+    box-shadow: 0 4px 20px 1px rgba(0, 0, 0, .06), 0 1px 4px rgba(0, 0, 0, .08);
+    z-index: 90;
+    transition: all .24s ease-in-out;
+}
+
+.nav-item {
+    position: relative;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    cursor: pointer;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.nav-item-hold {
+    display: block;
+    width: 100%;
+    padding: 26px 0;
+}
+
+.sidebar-left .navigation-left {
+    list-style: none;
+    text-align: center;
+    width: 120px;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.i-Bar-Chart-2:before {
+    content: "\efce";
+}
+
+.breadcrumb ul li {
+    display: inline-block;
+    padding: 0 .5rem;
+    line-height: 1;
+    vertical-align: bottom;
+    color: #70657b;
+}
+
+
+.card {
+    background-clip: border-box;
+    --tw-bg-opacity: 1;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px 1px rgba
+    #0000000f
+    (0, 0, 0, .06), 0 1px 4px rgba(0, 0, 0, .08);
+    border-radius: 10px;
+}
+
+.card .card-header {
+    --tw-border-opacity: 1;
+    border-bottom-width: 1px;
+    padding: 1rem 1.25rem;
+}
+
+.btn.ripple {
+    overflow: hidden;
+    transform: translateZ(0);
+}
+
+.btn.btn-primary {
+    --tw-bg-opacity: 1;
+    background-color: rgba(139, 92, 246, var(--tw-bg-opacity));
+    padding: 8px 20px;
+}
+
+.datatable-table > tbody > tr > td
+{
+    vertical-align: top;
+    padding: 8px 10px;
+}
