@@ -1,1 +1,56 @@
-Nothing should be ignored based on the provided file changes. The only modified file is 'resources/views/welcome.blade.php', which is a source code file and should not be added to .gitignore.
+```
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
+*.so
+*.a
+*.dll
+*.exe
+*.out
+
+# Dependencies
+vendor/
+node_modules/
+.env
+.env.local
+.env.*
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Editors
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
+
+# PHP/Laravel specific
+bootstrap/cache/
+storage/logs/
+storage/framework/cache/
+storage/framework/sessions/
+storage/framework/views/
+public/storage
+
+# Laravel Mix
+mix-manifest.json
+/public/css/
+/public/js/
+
+# Composer
+composer.lock
+/vendor/autoload.php
+/vendor/composer/
+```
