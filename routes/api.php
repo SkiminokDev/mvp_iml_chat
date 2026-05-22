@@ -3,6 +3,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\MessageController;
 
 // ПРОСТЕЙШИЙ ТЕСТ - БЕЗ КОНТРОЛЛЕРОВ
 Route::get('/test-ping', function() {
@@ -15,6 +16,15 @@ Route::middleware('auth:sanctum')->get('/test-me', function(Request $request) {
 		'user_id' => $user->id,
 		'email' => $user->email
 	]);
+});
+
+
+// =============================================
+// API v1 - Сообщения и разговоры
+// =============================================
+Route::middleware('auth:sanctum')->prefix('v1')->name('api.v1.')->group(function () {
+	// Отправка сообщения (создание/обновление разговора)
+	Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
 });
 
 

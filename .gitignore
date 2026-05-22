@@ -1,27 +1,21 @@
-```
+```gitignore
 # Compiled and build artifacts
 *.pyc
 __pycache__/
-*.o
-*.obj
-*.so
-*.a
-*.dll
-*.exe
-*.out
 
 # Dependencies
 vendor/
 node_modules/
-.env
-.env.local
-.env.*
 
 # Logs and temp files
 *.log
 *.tmp
 *.swp
-*.swo
+
+# Environment
+.env
+.env.local
+*.env.*
 
 # Editors
 .vscode/
@@ -36,21 +30,8 @@ coverage/
 htmlcov/
 .coverage
 
-# PHP/Laravel specific
-bootstrap/cache/
-storage/logs/
-storage/framework/cache/
-storage/framework/sessions/
-storage/framework/views/
-public/storage
-
-# Laravel Mix
-mix-manifest.json
-/public/css/
-/public/js/
-
-# Composer
-composer.lock
-/vendor/autoload.php
-/vendor/composer/
+# Build directories
+dist/
+build/
+target/
 ```
