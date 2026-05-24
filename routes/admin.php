@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Admin\ChatAdminController;
+use App\Http\Controllers\Admin\AuthorController;
 // Группа админ-панели (префикс /admin)
 Route::prefix('admin')->name('admin.')->middleware(['web'])->group(function () {
 
@@ -18,4 +19,8 @@ Route::prefix('admin')
 	->middleware(['auth']) // теперь 'login' существует, ошибка уйдёт
 	->group(function () {
 		Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+		
+		// Роуты для управления авторами сообщений
+		Route::get('/authors', [AuthorController::class, 'index'])->name('authors.index');
+		Route::get('/authors/{authorId}/messages', [AuthorController::class, 'messages'])->name('authors.messages');
 });

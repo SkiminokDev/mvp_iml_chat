@@ -38,7 +38,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/admin/users" class="nav-item-hold justify-center active">
+                    <a href="{{ route('admin.authors.index') }}" class="nav-item-hold justify-center {{ request()->routeIs('admin.authors.*') ? 'active' : '' }}">
+                        <i class="nav-icon i-Bar-Chart-2 text-base mr-2"></i>
+                        <p class="items-center">Авторы</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/users" class="nav-item-hold justify-center {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                         <i class="nav-icon i-Bar-Chart-2 text-base mr-2"></i>
                         <p class="items-center">Пользователи</p>
                     </a>
