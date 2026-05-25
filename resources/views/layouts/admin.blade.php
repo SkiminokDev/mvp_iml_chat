@@ -51,6 +51,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('admin.clients.index') }}" class="nav-item-hold justify-center {{ request()->routeIs('admin.clients.*') ? 'active' : '' }}">
+                        <i class="nav-icon i-Bar-Chart-2 text-base mr-2"></i>
+                        <p class="items-center">Клиенты</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="#" class="nav-item-hold opacity-50 cursor-not-allowed justify-center">
                         <i class="nav-icon i-Bar-Chart-2 text-base mr-2"></i>
                         <p class="items-center">Настройки</p>
