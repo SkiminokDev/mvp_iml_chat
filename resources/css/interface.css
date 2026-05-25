@@ -42,11 +42,18 @@
    MENU / NAVIGATION STYLES
    ============================================ */
 
-/* Боковое меню */
+/* Боковое меню - по умолчанию для мобильных */
 .sidebar-left {
     background: var(--bg-primary);
     box-shadow: var(--shadow-lg);
     border-right: 1px solid var(--border-color);
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 280px;
+    z-index: 1000;
+    transition: transform var(--transition-normal);
 }
 
 .sidebar-left .navigation-left {
@@ -71,18 +78,18 @@
 .nav-item-hold {
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    padding: 1rem 0.75rem;
+    justify-content: flex-start;
+    padding: 0.875rem 1.25rem;
     color: var(--text-secondary);
     text-decoration: none;
     transition: all var(--transition-fast);
     border-radius: var(--radius-md);
+    gap: 0.75rem;
 }
 
 .nav-item-hold:hover {
     color: var(--primary-color);
-    transform: translateY(-2px);
+    background: var(--bg-tertiary);
 }
 
 .nav-item.active .nav-item-hold,
@@ -105,8 +112,8 @@
 }
 
 .nav-icon {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+    min-width: 1.25rem;
     transition: transform var(--transition-normal);
 }
 
@@ -115,17 +122,116 @@
 }
 
 .nav-item p {
-    font-size: 0.75rem;
+    font-size: 0.9375rem;
     font-weight: 500;
     margin: 0;
-    text-align: center;
+    text-align: left;
+    white-space: nowrap;
 }
 
-/* Верхняя навигация */
+/* Горизонтальное меню для десктопа */
+@media (min-width: 1024px) {
+    .sidebar-left {
+        position: static;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .sidebar-left .navigation-left {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0.5rem 1.5rem;
+        gap: 0.25rem;
+    }
+
+    .nav-item {
+        margin: 0.25rem;
+    }
+
+    .nav-item-hold {
+        flex-direction: row;
+        padding: 0.625rem 1rem;
+        gap: 0.5rem;
+    }
+
+    .nav-icon {
+        font-size: 1.125rem;
+        margin-bottom: 0;
+    }
+
+    .nav-item p {
+        font-size: 0.875rem;
+    }
+
+    .nav-item.active::before {
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 4px;
+        border-radius: 4px 4px 0 0;
+    }
+
+    .side-content-wrap {
+        display: block;
+        width: 100%;
+    }
+
+    .main-content-wrap {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .main-content-body {
+        padding-top: 1.5rem !important;
+    }
+}
+
+/* Мобильная версия - вертикальное меню */
+@media (max-width: 1023px) {
+    .sidebar-left {
+        transform: translateX(-100%);
+    }
+
+    .sidebar-left.open {
+        transform: translateX(0);
+    }
+
+    .side-content-wrap {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 999;
+    }
+
+    .main-content-wrap {
+        margin-left: 0;
+    }
+}
+
+/* Верхняя панель */
 .header-2-wrapper {
     background: var(--bg-primary);
     box-shadow: var(--shadow-md);
     border-bottom: 1px solid var(--border-color);
+    padding: 0.75rem 1.5rem;
+}
+
+/* Десктоп - верхняя панель в одну строку с меню */
+@media (min-width: 1024px) {
+    .header-2-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        border-bottom: none;
+        border-radius: var(--radius-md);
+        margin: 0.5rem 1.5rem;
+        box-shadow: var(--shadow-sm);
+    }
 }
 
 /* ============================================
@@ -231,6 +337,49 @@
 .checkbox-label:hover,
 .radio-label:hover {
     color: var(--text-primary);
+}
+
+/* Form control - контейнер для полей формы */
+.form-control {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-control .label {
+    padding: 0.5rem 0;
+}
+
+.label-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Поля ввода внутри form-control с label должны иметь отступ сверху */
+.form-control label + input,
+.form-control label + select,
+.form-control label + textarea,
+.form-control .label + input,
+.form-control .label + select,
+.form-control .label + textarea,
+.form-control .label + .btn {
+    margin-top: 0.5rem;
+}
+
+/* Кнопки внутри form-control должны иметь тот же отступ что и поля с label */
+/* mt-5 = 1.25rem (20px), но мы приводим к единому стилю */
+.form-control .btn {
+    margin-top: 1.375rem; /* Приводим к общему отступу как у полей с label */
+}
+
+/* Если в form-control только кнопка (без label), убираем лишний отступ */
+.form-control:not(:has(label)):not(:has(.label)) .btn {
+    margin-top: 0;
+}
+
+/* Для кнопок с явным mt-* классом оставляем их оригинальный отступ */
+.form-control .btn.mt-5 {
+    margin-top: 1.25rem !important;
 }
 
 /* Кнопки форм */
@@ -348,6 +497,83 @@
 .form-input.success,
 .form-textarea.success {
     border-color: var(--success-color);
+}
+
+/* ============================================
+   BREADCRUMB STYLES
+   ============================================ */
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    padding: 1rem 0;
+    margin-bottom: 1.5rem;
+    font-size: 0.9375rem;
+}
+
+.breadcrumb p {
+    margin: 0;
+    white-space: nowrap;
+}
+
+.breadcrumb ul {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.breadcrumb li {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.breadcrumb a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+    font-weight: 500;
+}
+
+.breadcrumb a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+.breadcrumb .text-gray-500 {
+    color: var(--text-muted);
+}
+
+/* Десктоп - всё в одну строку */
+@media (min-width: 1024px) {
+    .breadcrumb {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .breadcrumb ul {
+        flex-wrap: nowrap;
+    }
+}
+
+/* Мобильная версия - перенос на следующую строку */
+@media (max-width: 1023px) {
+    .breadcrumb {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .breadcrumb ul {
+        flex-wrap: wrap;
+        width: 100%;
+    }
 }
 
 /* ============================================
