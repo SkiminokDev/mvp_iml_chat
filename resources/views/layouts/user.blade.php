@@ -7,6 +7,7 @@
     <title>@yield('title', 'Админ-панель')</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="{{ asset('css/interface.css') }}">
 
     <style>
         [x-cloak] { display: none !important; }

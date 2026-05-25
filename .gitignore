@@ -23,9 +23,6 @@ venv/
 dist/
 build/
 target/
-.gradle/
-
-# Logs and temp files
 *.log
 *.tmp
 *.swp
@@ -39,12 +36,17 @@ target/
 .DS_Store
 Thumbs.db
 
-# Cache directories
-.mypy_cache/
-.pytest_cache/
+# Coverage
 coverage/
 htmlcov/
 .coverage
+
+# Python specific
+.mypy_cache/
+.pytest_cache/
+
+# Gradle
+.gradle/
 
 # Compressed files
 *.zip
