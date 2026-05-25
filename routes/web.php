@@ -10,6 +10,11 @@ Route::get('/ping', function() {
 	return 'pong';
 });
 
+Route::prefix('admin')
+	->name('admin.')
+	->middleware(config('api.auth_required') ? ['web'] : []) //'web'
+	->group(base_path('routes/admin.php'));
+
 // Защищенный маршрут через стандартную веб-аутентификацию
 //Route::middleware(['auth'])->get('/secure', function() {
 //	return 'secure ok';

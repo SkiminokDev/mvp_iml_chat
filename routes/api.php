@@ -22,10 +22,15 @@ Route::middleware('auth:sanctum')->get('/test-me', function(Request $request) {
 // =============================================
 // API v1 - Сообщения и разговоры
 // =============================================
-Route::middleware('auth:sanctum')->prefix('v1')->name('api.v1.')->group(function () {
-	// Отправка сообщения (создание/обновление разговора)
-	Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
-});
+Route::middleware(config('api.auth_required') ? ['auth:sanctum'] : [])
+	->prefix('v1')
+	->name('api.v1.')
+	->group(function () {
+		// проверка запроса
+		Route::get('/info', fn()=>response()->json(['version' => 'v1', 'dev'=>'llmBot']));
+		// работа с сообщениями
+		Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
+	});
 
 
 //use Illuminate\Support\Facades\Route;
