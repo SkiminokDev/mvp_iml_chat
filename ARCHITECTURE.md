@@ -50,6 +50,28 @@
 - `model`: Название модели AI
 - `timestamps`: created_at, updated_at
 
+### 5. `clients` (Клиенты)
+Хранит информацию о клиентах системы.
+- `id`: Primary Key
+- `name`: Имя клиента
+- `active`: Статус активности (boolean)
+- `active_data`: Дата и время активации
+- `balance`: Баланс клиента (integer)
+- `timestamps`: created_at, updated_at
+
+### 6. `chats` (Чаты)
+Диалоги между клиентами и пользователями.
+- `id`: Primary Key
+- `user_id`: Foreign Key -> `users.id`
+- `client_id`: Foreign Key -> `clients.id` (Связь с клиентом)
+- `title`: Заголовок чата
+- `description`: Описание
+- `is_active`: Статус активности чата
+- `is_archived`: Статус архивации
+- `last_message_at`: Время последнего сообщения
+- `message_count`: Счётчик сообщений
+- `timestamps`: created_at, updated_at
+
 ---
 
 ## Взаимосвязи таблиц (ER-Diagram логика)
@@ -61,6 +83,8 @@ conversations (1) ----< (N) messages
 users (1) ----< (N) messages
 conversations (1) ----< (N) ai_logs
 messages (1) ------< (N) ai_logs
+clients (1) ----< (N) chats
+users (1) ----< (N) chats
 ```
 
 **Детали связей:**
@@ -70,6 +94,8 @@ messages (1) ------< (N) ai_logs
 4. **User <-> Messages**: Один пользователь может написать много сообщений.
 5. **Conversation <-> AiLogs**: К одному разговору может относиться много логов AI.
 6. **Message <-> AiLogs**: К одному сообщению может относиться много логов AI (например, модерация + генерация ответа).
+7. **Client <-> Chats**: Один клиент может иметь много чатов.
+8. **User <-> Chats**: Один пользователь может участвовать во многих чатах.
 
 ---
 
@@ -111,9 +137,42 @@ messages (1) ------< (N) ai_logs
   - `conversation()`: `belongsTo(Conversation::class)` — Связанный разговор (если есть).
   - `message()`: `belongsTo(Message::class)` — Связанное сообщение (если есть).
 
+### `App\Models\Client`
+- **Таблица**: `clients`
+- **Касты**:
+  - `active`: `boolean`
+  - `active_data`: `datetime`
+  - `balance`: `integer`
+- **Отношения**:
+  - `chats()`: `hasMany(Chat::class)` — Список чатов клиента.
+
+### `App\Models\Chat`
+- **Таблица**: `chats`
+- **Касты**:
+  - `is_active`: `boolean`
+  - `is_archived`: `boolean`
+  - `last_message_at`: `datetime`
+- **Отношения**:
+  - `user()`: `belongsTo(User::class)` — Пользователь чата.
+  - `client()`: `belongsTo(Client::class)` — Клиент чата.
+  - `messages()`: `hasMany(Message::class)` — Список сообщений.
+  - `lastMessage()`: `hasOne(Message::class)->latestOfMany()` — Последнее сообщение.
+
 ---
 
 ## Контроллеры и Запросы
+
+### `App\Http\Controllers\Admin\ClientController`
+Контроллер для управления клиентами в административной панели.
+- **Метод `index()`**:
+  - Отображает список всех клиентов с пагинацией.
+  - Поддерживает фильтры: `filter_id`, `filter_name`, `filter_active`.
+  - Возвращает представление `admin.clients.index`.
+  
+- **Метод `show($clientId)`**:
+  - Отображает детальную информацию о клиенте.
+  - Показывает список чатов клиента с пагинацией.
+  - Возвращает представление `admin.clients.show`.
 
 ### `App\Http\Requests\Api\StoreMessageRequest`
 Класс форм-запроса для валидации входящих данных при создании сообщения.
@@ -145,6 +204,8 @@ messages (1) ------< (N) ai_logs
 - `ConversationFactory`: Генерирует статус, случайные user/product, metadata.
 - `MessageFactory`: Генерирует текст, массив attachments, ip_address.
 - `AiLogFactory`: Генерирует action, input/output JSON, tokens.
+- `ClientFactory`: Генерирует name, active, active_data, balance.
+- `ChatFactory`: Генерирует title, description, is_active, is_archived, client_id, user_id.
 
 ### Сидеры (Seeders)
 - `DatabaseSeeder`: Вызывает остальные сидеры.
@@ -152,15 +213,27 @@ messages (1) ------< (N) ai_logs
 - `ConversationSeeder`: Создает тестовые диалоги, используя фабрики.
 - `MessageSeeder`: Наполняет диалоги сообщениями.
 - `AiLogSeeder`: Добавляет логи AI для анализа.
+- `ClientSeeder`: Создает тестовых клиентов.
+- `ChatSeeder`: Наполняет чаты данными.
 
 ---
 
 ## Маршруты (Routes)
-Файл: `routes/api.php`
+
+### API Routes (`routes/api.php`)
 
 | Метод | URI | Действие | Описание |
 |-------|-----|----------|----------|
 | POST | `/api/v1/messages` | `MessageController@store` | Создание нового сообщения и управление разговором |
+
+### Admin Routes (`routes/admin.php`)
+
+| Метод | URI | Действие | Описание |
+|-------|-----|----------|----------|
+| GET | `/admin/clients` | `ClientController@index` | Список клиентов с фильтрами и пагинацией |
+| GET | `/admin/clients/{clientId}` | `ClientController@show` | Детальная информация о клиенте и его чатах |
+| GET | `/admin/chats` | `ChatAdminController@index` | Список всех чатов |
+| GET | `/admin/authors` | `AuthorController@index` | Список авторов |
 
 ---
 
