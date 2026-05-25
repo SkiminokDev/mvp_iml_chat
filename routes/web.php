@@ -15,6 +15,7 @@ Route::prefix('admin')
 	->middleware(config('api.auth_required') ? ['web'] : []) //'web'
 	->group(base_path('routes/admin.php'));
 
+require __DIR__.'/auth.php';
 // Защищенный маршрут через стандартную веб-аутентификацию
 //Route::middleware(['auth'])->get('/secure', function() {
 //	return 'secure ok';
