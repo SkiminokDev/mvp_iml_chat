@@ -26,6 +26,7 @@ class Message extends Model
         'is_read',
         'is_deleted',
         'ip_address',
+        'user_external_id',
     ];
 
     protected $casts = [

@@ -23,8 +23,9 @@ class StoreMessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'integer', 'exists:users,id'],
-            'ad_id' => ['required', 'integer', 'exists:products,id'],
+            'user_id' => ['nullable', 'integer', 'exists:users,id'],
+            'user_external_id' => ['nullable', 'string', 'max:255'],
+            'chat_external_id' => ['required', 'string', 'max:255'],
             'text' => ['required', 'string', 'min:1', 'max:5000'],
             'files' => ['nullable', 'array', 'max:10'],
             'files.*' => ['string', 'max:500'],
@@ -39,12 +40,13 @@ class StoreMessageRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'user_id.required' => 'Поле user_id обязательно для заполнения.',
             'user_id.integer' => 'Поле user_id должно быть числом.',
             'user_id.exists' => 'Пользователь с указанным ID не найден.',
-            'ad_id.required' => 'Поле ad_id обязательно для заполнения.',
-            'ad_id.integer' => 'Поле ad_id должно быть числом.',
-            'ad_id.exists' => 'Продукт/объявление с указанным ID не найдено.',
+            'user_external_id.string' => 'Поле user_external_id должно быть строкой.',
+            'user_external_id.max' => 'Длина user_external_id не должна превышать 255 символов.',
+            'chat_external_id.required' => 'Поле chat_external_id обязательно для заполнения.',
+            'chat_external_id.string' => 'Поле chat_external_id должно быть строкой.',
+            'chat_external_id.max' => 'Длина chat_external_id не должна превышать 255 символов.',
             'text.required' => 'Поле text обязательно для заполнения.',
             'text.string' => 'Поле text должно быть строкой.',
             'text.min' => 'Минимальная длина сообщения - 1 символ.',
@@ -65,7 +67,8 @@ class StoreMessageRequest extends FormRequest
     {
         return [
             'user_id' => 'пользователь',
-            'ad_id' => 'объявление',
+            'user_external_id' => 'внешний ID пользователя',
+            'chat_external_id' => 'внешний ID чата',
             'text' => 'сообщение',
             'files' => 'файлы',
         ];

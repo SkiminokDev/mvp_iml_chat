@@ -1,4 +1,1 @@
-```markdown
-# Documentation
-*.md
-```
+Nothing needs to be added to .gitignore since only a markdown documentation file (ARCHITECTURE.md) was modified and no build artifacts, dependencies, or temporary files were included in the changes.

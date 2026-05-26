@@ -18,6 +18,7 @@ class Chat extends Model
 		'is_archived',
 		'last_message_at',
 		'message_count',
+		'external_id',
 	];
 
 	protected $casts = [

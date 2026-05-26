@@ -31,7 +31,9 @@
 Отдельные сообщения в рамках разговора.
 - `id`: Primary Key
 - `conversation_id`: Foreign Key -> `conversations.id`
+- `chat_id`: Foreign Key -> `chats.id` (Связь с чатом)
 - `user_id`: Foreign Key -> `users.id` (Автор сообщения)
+- `user_external_id`: string (Внешний идентификатор автора для интеграции)
 - `text`: Текст сообщения
 - `attachments`: JSON (массив файлов: пути, имена, типы MIME)
 - `metadata`: JSON (дополнительные данные: источник, флаги)
@@ -64,12 +66,21 @@
 - `id`: Primary Key
 - `user_id`: Foreign Key -> `users.id`
 - `client_id`: Foreign Key -> `clients.id` (Связь с клиентом)
+- `external_id`: string (Внешний идентификатор чата для интеграции)
 - `title`: Заголовок чата
 - `description`: Описание
 - `is_active`: Статус активности чата
 - `is_archived`: Статус архивации
 - `last_message_at`: Время последнего сообщения
 - `message_count`: Счётчик сообщений
+- `timestamps`: created_at, updated_at
+
+### 7. `users` (Пользователи)
+Хранит информацию о пользователях системы.
+- `id`: Primary Key
+- `external_id`: int (Внешний идентификатор пользователя для интеграции)
+- `name`: Имя пользователя
+- `email`: Email адрес
 - `timestamps`: created_at, updated_at
 
 ---
@@ -177,8 +188,8 @@ users (1) ----< (N) chats
 ### `App\Http\Requests\Api\StoreMessageRequest`
 Класс форм-запроса для валидации входящих данных при создании сообщения.
 - **Правила валидации**:
-  - `user_id`: required, integer, exists:users,id
-  - `ad_id` (product_id): required, integer, exists:products,id
+  - `chat_external_id`: required, string (Внешний идентификатор чата, по которому находится или создается чат)
+  - `user_external_id`: nullable, string (Внешний идентификатор пользователя)
   - `text`: required, string, max:5000
   - `files`: optional, array, max:10 элементов
   - `files.*`: file, max:5MB, mime:image/jpeg,image/png,application/pdf
@@ -188,11 +199,11 @@ users (1) ----< (N) chats
 - **Метод `store()`**:
   1. Валидирует данные через `StoreMessageRequest`.
   2. Запускает транзакцию БД.
-  3. Ищет активный разговор (`status='active'`) между `user_id` и `product_id`.
-  4. Если разговор не найден — создает новый.
-  5. Создает запись в таблице `messages` (с обработкой файлов в `attachments`).
-  6. Обновляет счетчик `message_count` и `last_message_at` в таблице `conversations`.
-  7. Возвращает JSON ответ с данными сообщения и разговора.
+  3. Ищет чат по параметру `chat_external_id` в таблице `chats`.
+  4. Если чат не найден — создает новый чат с данным `external_id`.
+  5. Опционально ищет пользователя по `user_external_id`.
+  6. Создает запись в таблице `messages` (с обработкой файлов в `attachments`).
+  7. Возвращает JSON ответ с данными сообщения и чата.
 
 ---
 
@@ -239,15 +250,15 @@ users (1) ----< (N) chats
 
 ## Поток данных (Data Flow) при создании сообщения
 
-1. **Client** отправляет POST запрос с `user_id`, `ad_id`, `text`, `files`.
+1. **Client** отправляет POST запрос с `chat_external_id`, `user_external_id` (optional), `text`, `files`.
 2. **Router** направляет запрос в `MessageController`.
 3. **Validator** (`StoreMessageRequest`) проверяет данные.
 4. **Controller**:
    - Начинает DB Transaction.
-   - Проверяет таблицу `conversations` на наличие активного диалога.
-   - Если нет -> `INSERT INTO conversations`.
+   - Ищет чат по `chat_external_id` в таблице `chats`.
+   - Если чат не найден -> `INSERT INTO chats` с данным `external_id`.
+   - Опционально ищет пользователя по `user_external_id`.
    - Обрабатывает файлы -> сохраняет пути в массив.
-   - `INSERT INTO messages` (с JSON в `attachments`).
-   - `UPDATE conversations` (инкремент счетчика, обновление времени).
+   - `INSERT INTO messages` (с JSON в `attachments`, ссылкой на `chat_id` и `user_external_id`).
    - Коммитит транзакцию.
-5. **Response**: JSON объект с созданной сущностью.
+5. **Response**: JSON объект с созданной сущностью сообщения и чата.
