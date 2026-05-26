@@ -1,4 +1,33 @@
-```markdown
-# Documentation
-*.md
+```
+# Laravel-specific ignores
+vendor/
+storage/
+bootstrap/cache/
+public/storage
+.env
+.env.local
+.env.*
+!.env.example
+
+# Database
+database/seeds/
+database/factories/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+storage/logs/
+
+# Temporary files
+*.tmp
+temp/
 ```
