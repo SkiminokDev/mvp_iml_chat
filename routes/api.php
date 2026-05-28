@@ -30,6 +30,10 @@ Route::middleware(config('api.auth_required') ? ['auth:sanctum'] : [])
 		Route::get('/info', fn()=>response()->json(['version' => 'v1', 'dev'=>'llmBot']));
 		// работа с сообщениями
 		Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
+		
+		// Получение сообщений из внешних мессенджеров
+		Route::get('/messengers/messages', [\App\Http\Controllers\Api\V1\MessengerMessageController::class, 'index'])
+			->name('messengers.messages');
 	});
 
 
