@@ -43,6 +43,22 @@ class GetMessengerMessagesCommand extends Command
         $this->client = $client;
     }
 
+	/**
+	 * Обьединение текстовых сообщений
+	*/
+	private function getAllMess(array $params): string
+	{
+		$text = '';
+		if (count($params) > 1) {
+			foreach($params as $item){
+				$text .= $item['type_user'] .': ' . $item['text'] . '| ';
+			}
+		} else {
+			$text = $item['type_user'] . ': ' . $params[0]['text'] . '| ';
+		}
+		return $text;
+	}
+
     /**
      * Выполнение команды.
      */
@@ -74,14 +90,22 @@ class GetMessengerMessagesCommand extends Command
                     
                     // Если есть сообщения, можно добавить краткую информацию
                     if (isset($result['data']['messages']) && is_array($result['data']['messages'])) {
-                        $messageCount = count($result['data']['messages']);
-                        $logMessage .= "  Сообщений: {$messageCount}\n";
+                        //$messageCount = count($result['data']['messages']);
+                        //$logMessage .= "  Сообщений: {$messageCount}\n";
                     }
                 } else {
                     $logMessage .= "  Ответ: " . substr((string)$result['data'], 0, 200) . "\n";
                 }
-                
-                $this->info("Сообщения успешно получены");
+	            print_r($result);
+				$this->info("Сообщения успешно получены");
+				// запуск логики обработки сообщений
+	            // выбираем все неотвеченные сообщения объединяем их в один текст
+	            $imMessage = $this->getAllMess($result['data']['data']);
+
+				// Делаем запрос в нейронку сделать анализ текста, что хочет клиент
+	            // запрос услуг, запрос цены, запрос параметров товара ..
+
+
                 
             } else {
                 $logMessage .= "  Статус: ОШИБКА\n";
